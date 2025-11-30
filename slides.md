@@ -75,17 +75,24 @@ Kousen IT, Inc.
 
 <v-clicks>
 
-- **Duration**: 5-hours
-- **Topics Covered**:
-  - Installation and CLI basics
-  - Code exploration and understanding
-  - Testing and quality assurance
-  - Git operations and version control
-  - Customization (CLAUDE.md, custom commands, hooks, output styles)
-  - Extensibility (Skills, Plugins, MCP integration)
-  - Advanced features (Plan Mode, Subagents, Extended Thinking, SDKs)
-- **Hands-on Labs**: Multiple exercises with real codebases
+- **Duration**: 5 hours of hands-on learning
+- **Format**: Instructor-led with multiple labs
+- **Hands-on Labs**: Real codebases in Python, JavaScript, Java
 - **Prerequisites**: Command-line experience, development background
+
+</v-clicks>
+
+---
+
+# Topics Covered
+
+<v-clicks>
+
+- **Foundation**: Installation, CLI basics, code exploration
+- **Core Skills**: Testing, documentation, git operations
+- **Customization**: CLAUDE.md, custom commands, hooks, output styles
+- **Extensibility**: Skills, Plugins, MCP integration
+- **Advanced**: Plan Mode, Subagents, Extended Thinking, SDKs
 
 </v-clicks>
 
@@ -151,6 +158,26 @@ Kousen IT, Inc.
 - Multi-step workflows
 
 </v-clicks>
+
+---
+
+# Creating Projects from Scratch
+
+<v-clicks>
+
+- **Start from nothing**: Empty directory + idea = working application
+- **Iterative development**: Concept → foundation → enhancements
+- **Full-stack creation**: UI, logic, styling, tests in one session
+- **Real example**: Our `lyrics-trainer` exercise started exactly this way
+
+</v-clicks>
+
+```bash
+mkdir my-project && cd my-project && git init
+claude
+"Create a web app that displays song lyrics one line at a time
+with Next, Previous, and Play buttons"
+```
 
 ---
 
@@ -426,13 +453,17 @@ CLAUDE.md file as though the user invoked the init task.
 
 ---
 
-# Hook Examples
+# Hook Example: Security Validation
 
 <v-clicks>
 
-### Security & Validation
-```bash
-# Pre-validate file edits
+- **Pre-validate file edits** before they happen
+- Block dangerous operations automatically
+- Provide feedback that Claude can respond to
+
+</v-clicks>
+
+```json
 {
   "hooks": {
     "preToolUse": {
@@ -442,9 +473,19 @@ CLAUDE.md file as though the user invoked the init task.
 }
 ```
 
-### Workflow Automation
-```bash
-# Auto-format on file write
+---
+
+# Hook Example: Workflow Automation
+
+<v-clicks>
+
+- **Auto-format code** on file write
+- Run linters, formatters, or validators
+- Maintain code quality automatically
+
+</v-clicks>
+
+```json
 {
   "hooks": {
     "preToolUse": {
@@ -454,17 +495,25 @@ CLAUDE.md file as though the user invoked the init task.
 }
 ```
 
-### Session Management
-```bash
-# SessionEnd: Generate summary report
+---
+
+# Hook Example: Session Management
+
+<v-clicks>
+
+- **SessionEnd hooks** run when conversation ends
+- Generate summary reports or logs
+- Clean up resources or finalize work
+
+</v-clicks>
+
+```json
 {
   "hooks": {
     "sessionEnd": "generate-session-report.sh"
   }
 }
 ```
-
-</v-clicks>
 
 **Important**: Treat hook feedback as user input - Claude adjusts if blocked
 
@@ -488,20 +537,32 @@ CLAUDE.md file as though the user invoked the init task.
 
 ---
 
-# Output Style Configuration
+# Using Built-in Output Styles
 
 <v-clicks>
 
-### Using Built-in Styles
-```bash
-# Configure in settings.json
+- **Explanatory**: Verbose with detailed explanations
+- **Learning**: Teaching-focused with step-by-step guidance
+- **Configure in settings** or via command line
+
+</v-clicks>
+
+```json
 {
-  "outputStyle": "explanatory"  // or "learning"
+  "outputStyle": "explanatory"
 }
 ```
 
-### Creating Custom Styles
-Create `~/.claude/output-styles/my-style.md`:
+```bash
+claude --output-style learning
+```
+
+---
+
+# Creating Custom Output Styles
+
+Create `~/.claude/output-styles/production.md`:
+
 ```markdown
 ---
 name: Production
@@ -516,12 +577,7 @@ description: Concise output for experienced developers
 - Assume expert-level knowledge
 ```
 
-### Switching Styles
-```bash
-claude --output-style production
-```
-
-</v-clicks>
+Then use: `claude --output-style production`
 
 ---
 
@@ -945,20 +1001,37 @@ for await (const message of query({
 
 ---
 
-# SDK Real-World Examples
+# SDK: Python Integration
 
 <v-clicks>
 
-### Python Integration
+- **Async iteration** over Claude responses
+- **Context files** passed directly to queries
+- **Turn limits** for controlled execution
+
+</v-clicks>
+
 ```python
 from claude_code import query
+
 async for msg in query("Refactor this module",
                        context_files=["app.py"],
                        max_turns=3):
     print(msg.content)
 ```
 
-### CI/CD Pipeline
+---
+
+# SDK: CI/CD Integration
+
+<v-clicks>
+
+- **Automate code reviews** in pull requests
+- **JSON output** for parsing results
+- **Integrate with GitHub Actions**, GitLab CI, etc.
+
+</v-clicks>
+
 ```yaml
 # GitHub Actions example
 - name: AI Code Review
@@ -966,14 +1039,23 @@ async for msg in query("Refactor this module",
     claude -p "Review PR changes" --output-format json > review.json
 ```
 
-### Git Hooks
+---
+
+# SDK: Git Hooks
+
+<v-clicks>
+
+- **Pre-commit security checks** before code is committed
+- **Limit tools** for focused, fast execution
+- **Fail-fast** on security issues
+
+</v-clicks>
+
 ```bash
 #!/bin/bash
 # .git/hooks/pre-commit
 claude -p "Check for security issues" --allowed-tools read,grep
 ```
-
-</v-clicks>
 
 ---
 
@@ -1285,31 +1367,38 @@ claude --allowed-tools read,write,edit,task
 
 ---
 
-# Common Issues & Solutions
+# Common Issues: Installation
 
 <v-clicks>
 
-### Installation Problems
 - **Command not found** → Check PATH: `npm list -g @anthropic/claude-code`
 - **Permission denied** → Use correct npm prefix or sudo
-- **Windows users** → WSL is required (Claude Code doesn't run natively on Windows)
+- **Windows users** → WSL is required (not native Windows)
 
-### Runtime Issues
-- **API key not found** → Set `ANTHROPIC_API_KEY` environment variable
-- **Rate limits** → Use `/cost` to monitor usage
-- **Context too large** → Use `/compact` to reduce conversation size
+</v-clicks>
 
-### Quick Fixes
 ```bash
 # Reinstall globally
 npm uninstall -g @anthropic/claude-code
 npm install -g @anthropic/claude-code
-
-# Alternative: Direct binary
-curl -fsSL https://storage.googleapis.com/anthropic-releases/claude-cli/install.sh | bash
 ```
 
+---
+
+# Common Issues: Runtime
+
+<v-clicks>
+
+- **API key not found** → Set `ANTHROPIC_API_KEY` environment variable
+- **Rate limits** → Use `/cost` to monitor usage
+- **Context too large** → Use `/compact` to reduce conversation size
+
 </v-clicks>
+
+```bash
+# Alternative installation: Direct binary
+curl -fsSL https://storage.googleapis.com/anthropic-releases/claude-cli/install.sh | bash
+```
 
 ---
 

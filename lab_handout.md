@@ -76,9 +76,9 @@ This document contains hands-on exercises for learning to use Claude Code for pr
 
 [← Back to Table of Contents](#table-of-contents)
 
-## Lab 1: Claude Code on an Existing Project
+## Lab 1: First Steps with Claude Code
 
-**Duration**: 5 minutes  
+**Duration**: 5 minutes
 **Goal**: Get comfortable with the basic Claude Code interface
 
 ### Setup
@@ -294,8 +294,8 @@ Use the `exercises/java/shopping-service` (Grails/Groovy) project or any legacy 
 
 ## Lab 6: Advanced Workflows
 
-**Duration**: 45 minutes
-**Goal**: Master advanced Claude Code features including Plan Mode, Skills, Plugins, Output Styles, and Hooks
+**Duration**: 50 minutes
+**Goal**: Master advanced Claude Code features including Plan Mode, Skills, Plugins, Output Styles, Hooks, and MCP
 
 ### Setup
 
@@ -333,7 +333,8 @@ Navigate to the `exercises/python/weather-app` directory for this lab.
 4. **Install and Test a Custom Skill**:
    ```bash
    # Copy example skill to your local skills directory
-   cp -r ../../../skills-and-plugins/api-documentation-skill ~/.claude/skills/
+   # (Run from the claude-code-training project root)
+   cp -r skills-and-plugins/api-documentation-skill ~/.claude/skills/
    ```
 
    Then ask:
@@ -354,7 +355,7 @@ Navigate to the `exercises/python/weather-app` directory for this lab.
    ```
 
 6. **Explore Plugins** (Discussion):
-   - Review `skills-and-plugins/plugin-examples/team-standards-plugin.md`
+   - Review `skills-and-plugins/plugin-examples/team-standards-plugin.md` (from project root)
    - Discuss how plugins bundle commands, skills, hooks, and MCP servers
    - Understand use cases for team-wide plugin distribution
 
@@ -394,8 +395,9 @@ Navigate to the `exercises/python/weather-app` directory for this lab.
 
 9. **Configure a SessionEnd Hook**:
    ```bash
-   # Copy example hook
-   cp ../../../hooks-examples/session-end-summary.sh ~/.claude/hooks/
+   # Copy example hook (run from project root)
+   mkdir -p ~/.claude/hooks
+   cp hooks-examples/session-end-summary.sh ~/.claude/hooks/
    chmod +x ~/.claude/hooks/session-end-summary.sh
    ```
 
@@ -406,8 +408,8 @@ Navigate to the `exercises/python/weather-app` directory for this lab.
 
 10. **Test PreToolUse Hook** - Security Validator:
    ```bash
-   # Copy security hook
-   cp ../../../hooks-examples/security-validator.sh ~/.claude/hooks/
+   # Copy security hook (run from project root)
+   cp hooks-examples/security-validator.sh ~/.claude/hooks/
    chmod +x ~/.claude/hooks/security-validator.sh
    ```
 
@@ -428,23 +430,60 @@ Navigate to the `exercises/python/weather-app` directory for this lab.
    "Create a hook that runs prettier to auto-format Python files before any Edit operation. Save it to ~/.claude/hooks/format-python.sh"
    ```
 
-#### Part E: CLAUDE.md and Custom Commands (5 minutes)
+#### Part E: MCP Server Integration (5 minutes)
 
-12. **CLAUDE.md creation**:
+12. **List and Explore MCP Servers**:
+   ```bash
+   # List currently configured MCP servers
+   claude mcp list
+   ```
+
+   Then in Claude Code:
+   ```
+   "What MCP servers are available and what tools do they provide?"
+   ```
+
+13. **Add Context7 MCP Server** (for up-to-date documentation):
+   ```bash
+   # Add Context7 for fetching latest library docs
+   claude mcp add --transport http context7 https://mcp.context7.com/mcp
+   ```
+
+   Test it:
+   ```
+   "Using Context7, look up the latest Flask documentation for error handling"
+   ```
+
+14. **Import from Claude Desktop** (if you have Claude Desktop installed):
+   ```bash
+   # Import any MCP servers configured in Claude Desktop
+   claude mcp add-from-claude-desktop
+   ```
+
+15. **Explore MCP Tools**:
+   ```
+   "Show me what tools are available from the MCP servers and demonstrate one"
+   ```
+   - Observe how MCP extends Claude's capabilities
+   - Note the `mcp__` prefix on tool names
+
+#### Part F: CLAUDE.md and Custom Commands (5 minutes)
+
+16. **CLAUDE.md creation**:
    ```
    "Create a CLAUDE.md file for this weather app with Python coding standards, dependencies, and project context"
    ```
 
    Note that the built-in slash command `/init` creates the `CLAUDE.md` file, but you can simply ask Claude to create it.
 
-13. **Custom slash command**:
+17. **Custom slash command**:
    ```
    "Help me create a custom slash command called 'update-deps' for updating Python dependencies safely with backup and testing"
    ```
 
-#### Part F: Feature Enhancement with All Tools (5 minutes)
+#### Part G: Feature Enhancement with All Tools (5 minutes)
 
-14. **Comprehensive Enhancement**:
+18. **Comprehensive Enhancement**:
 
    Now use Plan Mode with all your new tools:
    ```
@@ -462,6 +501,7 @@ After completing this lab, you will:
 - Understand plugin system for team collaboration
 - Customize output styles for different contexts
 - Implement hooks for workflow automation
+- Configure and use MCP servers for extended capabilities
 - Create reusable project configurations with CLAUDE.md
 - Build custom slash commands for common workflows
 - Orchestrate multiple advanced features together
@@ -482,6 +522,12 @@ After completing this lab, you will:
 - Verify file is in `~/.claude/output-styles/`
 - Check YAML frontmatter format
 - Restart claude with `--output-style` flag
+
+**MCP servers not working?**
+- Run `claude mcp list` to verify server is configured
+- Check that remote servers are accessible (network/firewall)
+- For local servers, verify the command exists and is executable
+- Restart Claude Code after adding new MCP servers
 
 [← Back to Table of Contents](#table-of-contents)
 
